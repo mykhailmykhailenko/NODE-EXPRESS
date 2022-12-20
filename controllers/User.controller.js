@@ -1,19 +1,17 @@
-const db = [];
+const User = require('../models/User');
 
-module.exports.createUser = (req, res, next) => {
+
+module.exports.createUser = async (req, res, next) => {
     const {body} = req;
-    const user = {...body, id: db.length};
-    db.push(user);
-    delete user.password;
-    res.status(201).send(user);
+    const createdUser = await new User(body);
+    const result = await createdUser.save();
+     res.status(201).send(result);
 }
 
-module.exports.getAllUsers = (req, res, next) => {
-    res.send(db);
+module.exports.getAllUsers = async (req, res, next) => {
+   const users = await User.findAll();
 }
 
 module.exports.getOneUser = () => {}
-
 module.exports.updateUser = () => {}
-
 module.exports.deleteUser = () => {}
