@@ -1,6 +1,4 @@
 const User = require('../models/User');
-
-
 module.exports.createUser = async (req, res, next) => {
         try {
                 const {body} = req;
@@ -10,9 +8,7 @@ module.exports.createUser = async (req, res, next) => {
         } catch(error) {
                 next(error);
         }
-
 }
-
 module.exports.getAllUsers = async (req, res, next) => {
         try {
                 const users = await User.findAll();
@@ -21,7 +17,6 @@ module.exports.getAllUsers = async (req, res, next) => {
                 next(error)
         }
 }
-
 module.exports.getOneUser = async (req, res, next) => {
         try {
                 const {params: {userId}} = req;
@@ -30,9 +25,7 @@ module.exports.getOneUser = async (req, res, next) => {
         } catch (error) {
                 next(error)
         }
-
 }
-
 module.exports.updateUser = async (req, res, next) => {
         try {
                 const {params: {userId}, body} = req;
@@ -43,7 +36,6 @@ module.exports.updateUser = async (req, res, next) => {
                 next(error);
         }
 }
-
 module.exports.deleteUser = async (req, res, next) => {
         try {
                 const {params: {userId}} = req;
@@ -54,4 +46,22 @@ module.exports.deleteUser = async (req, res, next) => {
               next(error);
         }
 
+}
+
+module.exports.loginUser = async(req, res, next) => {
+        try {
+                const{params: {userId}, body} = req;
+                const foundedUser = await User.findOne(Number(userId));
+               if(foundedUser.email === body.email){
+                        if(foundedUser.password === body.password) {
+                                res.status(202).send('Authorized succesfully')
+                        } else {
+                                res.status(401).send('Password incorrect');
+                        }
+               } else {
+                res.status(403).send('Incorrect data');
+               }
+        } catch(error) {
+                next(error);
+        }
 }
