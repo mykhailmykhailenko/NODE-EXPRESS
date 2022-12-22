@@ -1,13 +1,14 @@
 const express = require('express');
 const app = express();
 const http = require('http');
+const cors = require('cors');
 const bodyParser = express.json();
 const {validateUser} = require('./mw/validation.mw');
 const UserController = require('./controllers/User.controller');
 const getUserInstance = require('./mw/getUserInstance.mw');
 const { ValidationError } = require('yup');
 
-const PORT = 3000;
+const PORT = 5000;
 
 const server = http.createServer(app);
 
@@ -17,7 +18,6 @@ app.get('/users/', UserController.getAllUsers);
 app.get('/users/:userId', getUserInstance, UserController.getOneUser);
 app.put('/users/:userId', bodyParser, getUserInstance, UserController.updateUser);
 app.delete('/users/:userId', getUserInstance, UserController.deleteUser);
-
 const errorHandler = async (err, req, res, next) => {
     if (err instanceof TypeError) {
         return res.status(400).send('Invalid request');
@@ -27,10 +27,16 @@ const errorHandler = async (err, req, res, next) => {
     }
     res.status(404).send();
 }
+
+
+app.use(cors());
 app.use(errorHandler);
+
 server.listen(PORT, ()=> {
     console.log(`App is started on port ${PORT}`)
 });
+
+
 /*
-Реалізувати можливіть авторизації користувача
+Об'єднати фронт і бек для реєстрації та авторизації користувачів
 */
